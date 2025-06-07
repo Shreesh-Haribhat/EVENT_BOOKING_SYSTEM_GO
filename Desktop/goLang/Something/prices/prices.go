@@ -1,6 +1,11 @@
 package prices
 
-import "strconv"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+)
 
 type TaxIncludedPriceJob struct {
 	TaxRate           float64
@@ -11,7 +16,7 @@ type TaxIncludedPriceJob struct {
 func NewTaxIncludedPriceJob(taxRate float64) *TaxIncludedPriceJob {
 	return &TaxIncludedPriceJob{
 		TaxRate:     taxRate,
-		InputPrices: []float64{10, 20, 39},
+		InputPrices: []float64{},
 	}
 }
 
@@ -25,5 +30,32 @@ func (t *TaxIncludedPriceJob) Calculate() {
 
 	mp[strconv.FormatFloat(t.TaxRate, 'f', 2, 64)] = temp
 	t.TaxIncludedPrices = mp
+
+}
+
+func (t *TaxIncludedPriceJob) GetPricesFromFile() {
+	filePtr, err := os.Open("prices.txt")
+	if err != nil {
+		fmt.Println("something went wrong")
+		return
+	}
+
+	scanner := bufio.NewScanner(filePtr)
+	var lines []string
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+
+	err = scanner.Err()
+	if err != nil {
+		fmt.Println("Failed to fetch the file content")
+		return
+	}
+
+	for _, val := range lines {
+		num, _ := strconv.ParseFloat(val, 64)
+		t.InputPrices = append(t.InputPrices, num)
+	}
+	// fmt.Println(t.InputPrices)
 
 }
