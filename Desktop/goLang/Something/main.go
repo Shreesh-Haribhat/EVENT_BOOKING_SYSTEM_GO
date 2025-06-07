@@ -2,32 +2,32 @@ package main
 
 import (
 	"fmt"
-
-	Interface "shreesh.com.in/interface"
-	"shreesh.com.in/players"
+	"time"
 )
 
 func main() {
-	fmt.Println("Hello wellcome to my application")
+	fmt.Println("Hello There Well come to my applcaition")
 
-	// taxRate := []float64{0, 0.2, 0.3, 0.5}
+	done := make(chan bool)
 
-	// for _, taxRate := range taxRate {
-	// 	job1 := p.NewTaxIncludedPriceJob(taxRate)
-	// 	job1.GetPricesFromFile()
-	// 	job1.Calculate()
-	// 	fmt.Println(job1)
-	// }
+	go doSomething("fast 1", done)
+	go doSomething("fast 2", done)
+	go didSomething("slowwwwwwwww", done)
+	go doSomething("fast 3", done)
 
-	// player := players.NewCricketPlayer("Shreesh", 34)
-	player := players.NewFootBallPlayer("Shreesh", 34)
-
-	doSomething(player)
-
+	<-done
+	<-done
+	<-done
+	<-done
 }
 
-func doSomething(allrounder Interface.Allrounder) {
-	allrounder.Batting("shreesh", 25)
+func doSomething(str string, done chan bool) {
+	fmt.Println(str)
+	done <- true
+}
 
-	allrounder.Bowling("Shrusti", 25)
+func didSomething(str string, done chan bool) {
+	time.Sleep(3 * 100)
+	fmt.Println(str)
+	done <- true
 }
