@@ -2,32 +2,20 @@ package main
 
 import (
 	"fmt"
-	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	fmt.Println("Hello There Well come to my applcaition")
+	fmt.Println("Hey there! well come to my application")
 
-	done := make(chan bool)
+	server := gin.Default()
 
-	go doSomething("fast 1", done)
-	go doSomething("fast 2", done)
-	go didSomething("slowwwwwwwww", done)
-	go doSomething("fast 3", done)
+	server.GET("/shreesh", printShreesh)
 
-	<-done
-	<-done
-	<-done
-	<-done
+	server.Run(":8080")
 }
 
-func doSomething(str string, done chan bool) {
-	fmt.Println(str)
-	done <- true
-}
-
-func didSomething(str string, done chan bool) {
-	time.Sleep(3 * 100)
-	fmt.Println(str)
-	done <- true
+func printShreesh(context *gin.Context) {
+	context.JSON(200, "Hey Shreesh Keep Hustling")
 }
